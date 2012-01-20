@@ -30,7 +30,7 @@
           <xsl:with-param name="total-count" tunnel="yes" select="$total-count"/>
           <xsl:with-param name="contents-per-page" tunnel="yes" select="$contents-per-page"/>
         </xsl:call-template>
-        <div class="list clear clearfix append-bottom">
+        <div itemscope="itemscope" itemtype="http://schema.org/ItemList" class="list clear clearfix append-bottom">
           <xsl:apply-templates select="/result/contents/content"/>
           <xsl:if test="$rss-page">
             <a href="{portal:createUrl($rss-page, ('articleSectionId', portal:getPageKey()))}" class="rss">
@@ -56,7 +56,7 @@
   </xsl:template>
 
   <xsl:template match="content">
-    <div class="item">
+    <div class="item" itemprop="itemListElement">
       <xsl:if test="position() = 1">
         <xsl:attribute name="class">item first</xsl:attribute>
       </xsl:if>
@@ -68,20 +68,16 @@
           <xsl:with-param name="size" select="'list'"/>
         </xsl:call-template>
       </xsl:if>
-      <h2>
-        <a href="{portal:createContentUrl(@key,())}">
-          <xsl:value-of select="contentdata/heading"/>
-        </a>
-      </h2>
+      <h2><a itemprop="headline" href="{portal:createContentUrl(@key,())}"><xsl:value-of select="display-name"/></a></h2>
       <xsl:if test="$device-class = 'mobile'">
         <xsl:call-template name="image">
           <xsl:with-param name="size" select="'wide'"/>
         </xsl:call-template>
       </xsl:if>
       <p>
-        <span class="byline">
+        <time class="byline" itemprop="datePublished" datetime="{substring-before(@publishfrom,' ')}" pubdate="pubdate">
           <xsl:value-of select="util:format-date(@publishfrom, /result/context/@languagecode, 'short', true())"/>
-        </span>
+        </time>
         <xsl:value-of select="util:crop-text(contentdata/preface, xs:integer(floor($config-region-width * 0.5)))"/>
       </p>
       <a href="{portal:createContentUrl(@key,())}" title="{title}">
